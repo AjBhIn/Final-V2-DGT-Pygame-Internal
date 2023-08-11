@@ -4,6 +4,7 @@ import sys
 import race_track as rt
 import white_board as wt
 import question_answers as qs
+import csv
 
 class Game:
     def __init__(self):
@@ -30,10 +31,8 @@ class Game:
         self.image_of_cursor_rotate = pg.transform.rotozoom(self.image_of_cursor, 30, 1)  # rotating the image
         self.cursor = pg.cursors.Cursor((11, 12), self.image_of_cursor_rotate) # putting the image in cursor widget
 
-        # Next question indicator and the number of question
-        self.Qs_num = 0
-        self.next_quest_ind = False
         self.next_que = pg.USEREVENT + 1
+        pg.time.set_timer(self.next_que, 2000)
 
         # Checks if it is time to run to the next question
     def next_question(self):
@@ -47,7 +46,13 @@ class Game:
                     sys.exit()
                 
                 if events.type == self.next_que:
-                    print("yes")
+                    qs.class_question_list[0].next_question()
+                    qs.class_answer_list[0][0].next_ans()
+                    qs.class_answer_list[0][1].next_ans()
+                    qs.class_answer_list[0][2].next_ans()
+                    qs.class_answer_list[0][3].next_ans()
+                    qs.question_spirit.add(qs.class_question_list[1])
+                    qs.answers_spirit.add(qs.class_answer_list[1])
 
             # Putting colours on the window
             self.window.fill(self.window_bg)
@@ -65,13 +70,13 @@ class Game:
             wt.display_board.surface.blit(rt.divider_lane.line_surface, rt.divider_lane.pos)
 
             # Putting the questions on the screen
-            qs.Qs_list[self.Qs_num].q_render()
+            qs.question_spirit.draw(wt.display_board.surface)
 
             # Putting the options on the screen
-            self.next_quest_ind = qs.Anss_list[self.Qs_num].opt_render(self.window)
+            qs.answers_spirit.draw(self.window)
 
-            if self.next_quest_ind:
-                self.next_question()
+            # if self.next_quest_ind:
+            #     self.next_question()
 
             # Putting a custom cursor
             pg.mouse.set_cursor(self.cursor)
