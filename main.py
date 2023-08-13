@@ -4,7 +4,6 @@ import sys
 import race_track as rt
 import white_board as wt
 import question_answers as qs
-import csv
 
 class Game:
     def __init__(self):
@@ -31,12 +30,14 @@ class Game:
         self.image_of_cursor_rotate = pg.transform.rotozoom(self.image_of_cursor, 30, 1)  # rotating the image
         self.cursor = pg.cursors.Cursor((11, 12), self.image_of_cursor_rotate) # putting the image in cursor widget
 
-        self.next_que = pg.USEREVENT + 1
-        pg.time.set_timer(self.next_que, 2000)
+        # Telll the loop function if it is time for the next question as well stores te value for the next question number
+        self.moving_to_next = False
+        self.question_number = 0
 
         # Checks if it is time to run to the next question
     def next_question(self):
         pg.event.post(pg.event.Event(self.next_que))
+    
 
     def looper(self):
         while True:
@@ -44,15 +45,30 @@ class Game:
                 if events.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
+
                 
-                if events.type == self.next_que:
-                    qs.class_question_list[0].next_question()
-                    qs.class_answer_list[0][0].next_ans()
-                    qs.class_answer_list[0][1].next_ans()
-                    qs.class_answer_list[0][2].next_ans()
-                    qs.class_answer_list[0][3].next_ans()
-                    qs.question_spirit.add(qs.class_question_list[1])
-                    qs.answers_spirit.add(qs.class_answer_list[1])
+                # print(self.question_number)
+                if self.question_number < (qs.num_questions_answers - 2) # Minusing 2 from the original list of question to keep it below the last question:
+                    if self.moving_to_next:
+                        pg.time.wait(2000)
+                        qs.class_question_list[self.question_number].next_question()
+                        qs.class_answer_list[self.question_number][0].next_ans()
+                        qs.class_answer_list[self.question_number][1].next_ans()
+                        qs.class_answer_list[self.question_number][2].next_ans()
+                        qs.class_answer_list[self.question_number][3].next_ans()
+                        qs.button_states[0] = False
+                        qs.button_states[1] = False
+                        qs.button_states[2] = False
+                        qs.button_states[3] = False
+                        self.question_number += 1
+                        qs.question_spirit.add(qs.class_question_list[self.question_number])
+                        qs.answers_spirit.add(qs.class_answer_list[self.question_number])
+                        qs.question_ans_num = self.question_number
+                        self.moving_to_next = False
+                        print(self.question_number)
+                else:
+                    self.question_number = self.question_number
+                    qs.question_ans_num = self.question_number
 
             # Putting colours on the window
             self.window.fill(self.window_bg)
@@ -70,13 +86,18 @@ class Game:
             wt.display_board.surface.blit(rt.divider_lane.line_surface, rt.divider_lane.pos)
 
             # Putting the questions on the screen
-            qs.question_spirit.draw(wt.display_board.surface)
+            qs.question_spirit.draw(self.window)
+            qs.class_question_list[self.question_number].update()
 
             # Putting the options on the screen
             qs.answers_spirit.draw(self.window)
+            qs.class_answer_list[self.question_number][0].update()
+            qs.class_answer_list[self.question_number][1].update()
+            qs.class_answer_list[self.question_number][2].update()
+            qs.class_answer_list[self.question_number][3].update()
 
-            # if self.next_quest_ind:
-            #     self.next_question()
+            if True in qs.button_states:
+                self.moving_to_next = True
 
             # Putting a custom cursor
             pg.mouse.set_cursor(self.cursor)
