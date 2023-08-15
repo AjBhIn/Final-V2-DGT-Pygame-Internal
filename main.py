@@ -4,13 +4,14 @@ import sys
 import race_track as rt
 import white_board as wt
 import question_answers as qs
+from datetime import datetime as dt
 
 class Game:
     def __init__(self):
         # Settings for the window
         self.WIDTH = 1042
         self.HEIGHT = 697
-        self.FPS = 60
+        self.FPS = 90
 
         # Starting pygame
         pg.init()
@@ -33,11 +34,11 @@ class Game:
         # Telll the loop function if it is time for the next question as well stores te value for the next question number
         self.moving_to_next = False
         self.question_number = 0
-
-        # Checks if it is time to run to the next question
-    def next_question(self):
-        pg.event.post(pg.event.Event(self.next_que))
-    
+        self.updated_len = qs.num_questions_answers - 2
+        self.timer = pg.USEREVENT + 1
+        self.current_time = 0
+        self.button_pressed_time = 0
+        self.next_ques_in = 3
 
     def looper(self):
         while True:
@@ -48,30 +49,57 @@ class Game:
 
                 
                 # print(self.question_number)
-                if self.question_number < (qs.num_questions_answers - 2) # Minusing 2 from the original list of question to keep it below the last question:
+                if self.question_number < qs.num_questions_answers - 2: # Minusing 2 from the original list of question to keep it below the last question:
                     if self.moving_to_next:
-                        pg.time.wait(2000)
-                        qs.class_question_list[self.question_number].next_question()
-                        qs.class_answer_list[self.question_number][0].next_ans()
-                        qs.class_answer_list[self.question_number][1].next_ans()
-                        qs.class_answer_list[self.question_number][2].next_ans()
-                        qs.class_answer_list[self.question_number][3].next_ans()
-                        qs.button_states[0] = False
-                        qs.button_states[1] = False
-                        qs.button_states[2] = False
-                        qs.button_states[3] = False
-                        self.question_number += 1
-                        qs.question_spirit.add(qs.class_question_list[self.question_number])
-                        qs.answers_spirit.add(qs.class_answer_list[self.question_number])
-                        qs.question_ans_num = self.question_number
-                        self.moving_to_next = False
-                        print(self.question_number)
+
+                        # Checking if it is time to move to next question
+                        self.current_time = dt.now()
+                        self.time = (self.current_time - self.button_pressed_time)
+
+                        if int(self.time.total_seconds()) > self.next_ques_in:
+                            pass
+                        else:
+                            while True:
+                                self.current_time = dt.now()
+                                self.time = (self.current_time - self.button_pressed_time)
+                                if int(self.time.total_seconds()) > self.next_ques_in:
+                                    break
+
+                        if int(self.time.total_seconds()) > self.next_ques_in:
+                            qs.class_question_list[self.question_number].next_question()
+                            qs.class_answer_list[self.question_number][0].next_ans()
+                            qs.class_answer_list[self.question_number][1].next_ans()
+                            qs.class_answer_list[self.question_number][2].next_ans()
+                            qs.class_answer_list[self.question_number][3].next_ans()
+                            qs.button_states[0] = False
+                            qs.button_states[1] = False
+                            qs.button_states[2] = False
+                            qs.button_states[3] = False
+                            self.question_number += 1
+                            qs.question_spirit.add(qs.class_question_list[self.question_number])
+                            qs.answers_spirit.add(qs.class_answer_list[self.question_number])
+                            qs.question_ans_num = self.question_number
+                            self.moving_to_next = False
                 else:
                     self.question_number = self.question_number
                     qs.question_ans_num = self.question_number
+                    # print(qs.answer_check)
+                    # print(qs.wrong_ans_store)
+                                            # self.updated_len = len(qs.class_question_list)
+                    # if qs.answer_check[self.question_number]:
+                    #         pass
+                    # elif qs.answer_check[self.question_number] == False:
+                    #     qs.class_question_list.append(qs.QuestionMaker(qs.questions_list[self.question_number][0], qs.questions_list[self.question_number][1]))
+                    #     # Making of answers with spirits
+                    #     qs.class_answer_list.append([qs.AnswerMaker_A("A", qs.questions_list[self.question_number][2], qs.questions_list[self.question_number][6], qs.opt_colr_list[0]), 
+                    #                             qs.AnswerMaker_B("B", qs.questions_list[self.question_number][3], qs.questions_list[self.question_number][6], qs.opt_colr_list[1]),
+                    #                             qs.AnswerMaker_C("C", qs.questions_list[self.question_number][4], qs.questions_list[self.question_number][6], qs.opt_colr_list[2]),
+                    #                             qs.AnswerMaker_D("D", qs.questions_list[self.question_number][5], qs.questions_list[self.question_number][6], qs.opt_colr_list[3])
+                    #                             ])
 
             # Putting colours on the window
             self.window.fill(self.window_bg)
+            self.current_time = pg.time.get_ticks()
 
                 # Putting the tracks on the screen
             for each_lane in rt.tracks:
@@ -91,13 +119,17 @@ class Game:
 
             # Putting the options on the screen
             qs.answers_spirit.draw(self.window)
-            qs.class_answer_list[self.question_number][0].update()
-            qs.class_answer_list[self.question_number][1].update()
-            qs.class_answer_list[self.question_number][2].update()
-            qs.class_answer_list[self.question_number][3].update()
+            button_pressed_1 = qs.class_answer_list[self.question_number][0].update()
+            button_pressed_2 = qs.class_answer_list[self.question_number][1].update()
+            button_pressed_3 = qs.class_answer_list[self.question_number][2].update()
+            button_pressed_4 = qs.class_answer_list[self.question_number][3].update()
 
             if True in qs.button_states:
                 self.moving_to_next = True
+            
+            if button_pressed_1 == True or button_pressed_2 == True or button_pressed_3 == True or button_pressed_4 == True:
+                self.button_pressed_time = dt.now()
+
 
             # Putting a custom cursor
             pg.mouse.set_cursor(self.cursor)
