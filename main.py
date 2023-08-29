@@ -34,11 +34,11 @@ class Game:
         # Telll the loop function if it is time for the next question as well stores te value for the next question number
         self.moving_to_next = False
         self.question_number = 0
-        self.updated_len = qs.num_questions_answers - 2
-        self.timer = pg.USEREVENT + 1
+        self.total_question_len = qs.num_questions_answers - 2
         self.current_time = 0
         self.button_pressed_time = 0
-        self.next_ques_in = 3
+        self.next_ques_in = 2
+        self.updates_ques_num = 0
 
     def looper(self):
         while True:
@@ -47,11 +47,8 @@ class Game:
                     pg.quit()
                     sys.exit()
 
-                
-                # print(self.question_number)
-                if self.question_number < qs.num_questions_answers - 2: # Minusing 2 from the original list of question to keep it below the last question:
+                if self.question_number < (len(qs.class_question_list) - 1): # Minusing 2 from the original list of question to keep it below the last question:
                     if self.moving_to_next:
-
                         # Checking if it is time to move to next question
                         self.current_time = dt.now()
                         self.time = (self.current_time - self.button_pressed_time)
@@ -75,28 +72,37 @@ class Game:
                             qs.button_states[1] = False
                             qs.button_states[2] = False
                             qs.button_states[3] = False
+                            print(len(qs.class_answer_list))
+                            print(len(qs.class_question_list))
+                            print(self.question_number)
                             self.question_number += 1
+                            self.updates_ques_num = self.question_number
                             qs.question_spirit.add(qs.class_question_list[self.question_number])
                             qs.answers_spirit.add(qs.class_answer_list[self.question_number])
                             qs.question_ans_num = self.question_number
                             self.moving_to_next = False
+    
+                # else:
+                #     self.updates_ques_num = self.question_number
+                #     print(qs.wrong_ans_store)
+                #     if not qs.wrong_ans_store == False:
+                #         print("yes")
+                #         for each_wrong in qs.wrong_ans_store:
+                #             self.updates_ques_num += 1
+                #             #     # Making instance of questions
+                #             # qs.class_question_list.append(qs.QuestionMaker(f"Q{self.updates_ques_num}", qs.questions_list[each_wrong[0]][1]))
+
+                #             # # Making of answers with spirits
+                #             # qs.class_answer_list.append([qs.AnswerMaker_A("A", qs.questions_list[each_wrong[0]][2], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[0]), 
+                #             #                         qs.AnswerMaker_B("B", qs.questions_list[each_wrong[0]][3], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[1]),
+                #             #                         qs.AnswerMaker_C("C", qs.questions_list[each_wrong[0]][4], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[2]),
+                #             #                         qs.AnswerMaker_D("D", qs.questions_list[each_wrong[0]][5], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[3])
+                #             #                         ])
                 else:
                     self.question_number = self.question_number
                     qs.question_ans_num = self.question_number
-                    # print(qs.answer_check)
-                    # print(qs.wrong_ans_store)
-                                            # self.updated_len = len(qs.class_question_list)
-                    # if qs.answer_check[self.question_number]:
-                    #         pass
-                    # elif qs.answer_check[self.question_number] == False:
-                    #     qs.class_question_list.append(qs.QuestionMaker(qs.questions_list[self.question_number][0], qs.questions_list[self.question_number][1]))
-                    #     # Making of answers with spirits
-                    #     qs.class_answer_list.append([qs.AnswerMaker_A("A", qs.questions_list[self.question_number][2], qs.questions_list[self.question_number][6], qs.opt_colr_list[0]), 
-                    #                             qs.AnswerMaker_B("B", qs.questions_list[self.question_number][3], qs.questions_list[self.question_number][6], qs.opt_colr_list[1]),
-                    #                             qs.AnswerMaker_C("C", qs.questions_list[self.question_number][4], qs.questions_list[self.question_number][6], qs.opt_colr_list[2]),
-                    #                             qs.AnswerMaker_D("D", qs.questions_list[self.question_number][5], qs.questions_list[self.question_number][6], qs.opt_colr_list[3])
-                    #                             ])
 
+                        
             # Putting colours on the window
             self.window.fill(self.window_bg)
             self.current_time = pg.time.get_ticks()

@@ -102,6 +102,8 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
                 answer_check.append(True)
             else:
                 pass
+            
+
             class_answer_list[question_ans_num][0].image.blit(correct_icon, correct_icon_pla)
             class_answer_list[question_ans_num][1].image.set_alpha(127)
             class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
@@ -114,6 +116,15 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
             if len(answer_check) <= actual_que_num:
                 answer_check.append(False)
                 wrong_ans_store.append([len(answer_check), False])
+                # Making instance of questions
+                class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
+
+                # Making of answers with spirits
+                class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
+                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                                    ])
             else:
                 pass
             if class_answer_list[question_ans_num][1].anss == self.correct_answer:
@@ -207,6 +218,15 @@ class AnswerMaker_B(pg.sprite.Sprite, SettingsAnswer):
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(False)
                     wrong_ans_store.append([len(answer_check), False])
+                    # Making instance of questions
+                    class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
+
+                    # Making of answers with spirits
+                    class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
+                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                                    ])
                 else:
                     pass
                 if class_answer_list[question_ans_num][0].anss == self.correct_answer:
@@ -316,6 +336,15 @@ class AnswerMaker_C(pg.sprite.Sprite, SettingsAnswer):
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(False)
                     wrong_ans_store.append([len(answer_check), False])
+                    # Making instance of questions
+                    class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
+
+                    # Making of answers with spirits
+                    class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
+                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                                    ])
                 else:
                     pass
                 if class_answer_list[question_ans_num][1].anss == self.correct_answer:
@@ -410,6 +439,15 @@ class AnswerMaker_D(pg.sprite.Sprite, SettingsAnswer):
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(False)
                     wrong_ans_store.append([len(answer_check), False])
+                        # Making instance of questions
+                    class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
+
+                    # Making of answers with spirits
+                    class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
+                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                                    ])
                 else:
                     pass
                 if class_answer_list[question_ans_num][1].anss == self.correct_answer:
@@ -488,7 +526,7 @@ for Q_num in range(1, num_questions_answers):
     random.shuffle(opt_colr_list)
 
     # Making instance of questions
-    class_question_list.append(QuestionMaker(questions_list[Q_num][0], questions_list[Q_num][1]))
+    class_question_list.append(QuestionMaker(f"Q{Q_num}", questions_list[Q_num][1]))
 
     # Making of answers with spirits
     class_answer_list.append([AnswerMaker_A("A", questions_list[Q_num][2], questions_list[Q_num][6], opt_colr_list[0]), 
