@@ -12,10 +12,10 @@ QUESTION_COLOUR = (0,0,0)
 
 # Colours for the options
 RED_COLOUR = (235, 62, 62)
-YELLOW_COLOUR = (255, 215, 20)
+ORANGE_COLOR = (255, 184, 0)
 GREEN_COLOUR = (39, 239, 83)
 BLUE_COLOUR = (20, 153, 228)
-opt_colr_list = [RED_COLOUR, YELLOW_COLOUR, GREEN_COLOUR, BLUE_COLOUR]
+opt_colr_list = [RED_COLOUR, ORANGE_COLOR, GREEN_COLOUR, BLUE_COLOUR]
 
 pg.init()
 
@@ -61,7 +61,10 @@ opt_font_colr = (255, 255, 255)
 JURA_MEDIUM = "Jura-Medium.ttf"
 button_states = [False, False, False, False]
 answer_check = []
-wrong_ans_store = []
+answer_check_copy = []
+wrong_answer_store = []
+question_numbers = []
+
 
 class SettingsAnswer:
         
@@ -102,7 +105,8 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
                 answer_check.append(True)
             else:
                 pass
-            
+
+            answer_check_copy.append(True)
 
             class_answer_list[question_ans_num][0].image.blit(correct_icon, correct_icon_pla)
             class_answer_list[question_ans_num][1].image.set_alpha(127)
@@ -111,22 +115,27 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
             class_answer_list[question_ans_num][2].image.blit(wrong_icon, wrong_icon_pla)
             class_answer_list[question_ans_num][3].image.set_alpha(127)
             class_answer_list[question_ans_num][3].image.blit(wrong_icon, wrong_icon_pla)
+
         else:
             class_answer_list[question_ans_num][0].image.blit(wrong_icon, wrong_icon_pla)
             if len(answer_check) <= actual_que_num:
                 answer_check.append(False)
-                wrong_ans_store.append([len(answer_check), False])
-                # Making instance of questions
+                wrong_answer_store.append([len(answer_check), False])
+                    # Making instance of questions
                 class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
 
                 # Making of answers with spirits
                 class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
-                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
-                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
-                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
-                                                    ])
+                                        AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                        AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                        AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                        ])
             else:
                 pass
+
+            answer_check_copy.append(False)
+
+
             if class_answer_list[question_ans_num][1].anss == self.correct_answer:
                 class_answer_list[question_ans_num][1].image.set_alpha(127)
                 class_answer_list[question_ans_num][1].image.blit(correct_icon, correct_icon_pla)
@@ -147,6 +156,7 @@ class AnswerMaker_A(pg.sprite.Sprite, SettingsAnswer):
             else:
                 class_answer_list[question_ans_num][3].image.set_alpha(127)
                 class_answer_list[question_ans_num][3].image.blit(wrong_icon, wrong_icon_pla)
+
                 
 
     def cliked(self):
@@ -206,6 +216,9 @@ class AnswerMaker_B(pg.sprite.Sprite, SettingsAnswer):
                     answer_check.append(True)
                 else:
                     pass
+
+                answer_check_copy.append(True)
+
                 class_answer_list[question_ans_num][1].image.blit(correct_icon, correct_icon_pla)
                 class_answer_list[question_ans_num][0].image.set_alpha(127)
                 class_answer_list[question_ans_num][0].image.blit(wrong_icon, wrong_icon_pla)
@@ -217,18 +230,23 @@ class AnswerMaker_B(pg.sprite.Sprite, SettingsAnswer):
                 class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(False)
-                    wrong_ans_store.append([len(answer_check), False])
+                    wrong_answer_store.append([len(answer_check), False])
+
                     # Making instance of questions
                     class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
 
                     # Making of answers with spirits
                     class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
-                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
-                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
-                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
-                                                    ])
+                                            AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                            AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                            AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                            ])
+                    
                 else:
                     pass
+
+                answer_check_copy.append(False)
+
                 if class_answer_list[question_ans_num][0].anss == self.correct_answer:
                     class_answer_list[question_ans_num][0].image.set_alpha(127)
                     class_answer_list[question_ans_num][0].image.blit(correct_icon, correct_icon_pla)
@@ -310,7 +328,6 @@ class AnswerMaker_C(pg.sprite.Sprite, SettingsAnswer):
         def next_ans(self):
             self.kill()
 
-
         def check_own(self):
             #  Setting up the images and their placment
             correct_icon = pg.image.load("correct  image.png").convert_alpha()
@@ -324,6 +341,9 @@ class AnswerMaker_C(pg.sprite.Sprite, SettingsAnswer):
                     answer_check.append(True)
                 else:
                     pass
+
+                answer_check_copy.append(True)
+
                 class_answer_list[question_ans_num][2].image.blit(correct_icon, correct_icon_pla)
                 class_answer_list[question_ans_num][1].image.set_alpha(127)
                 class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
@@ -335,18 +355,22 @@ class AnswerMaker_C(pg.sprite.Sprite, SettingsAnswer):
                 class_answer_list[question_ans_num][2].image.blit(wrong_icon, wrong_icon_pla)
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(False)
-                    wrong_ans_store.append([len(answer_check), False])
+                    wrong_answer_store.append([len(answer_check), False])
                     # Making instance of questions
                     class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
 
                     # Making of answers with spirits
                     class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
-                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
-                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
-                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
-                                                    ])
+                                        AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                        AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                        AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                        ])
                 else:
                     pass
+
+                answer_check_copy.append(False)
+
+
                 if class_answer_list[question_ans_num][1].anss == self.correct_answer:
                     class_answer_list[question_ans_num][1].image.set_alpha(127)
                     class_answer_list[question_ans_num][1].image.blit(correct_icon, correct_icon_pla)
@@ -424,8 +448,12 @@ class AnswerMaker_D(pg.sprite.Sprite, SettingsAnswer):
             if self.anss == self.correct_answer:
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(True)
+                    print()
                 else:
                     pass
+
+                answer_check_copy.append(True)
+
                 class_answer_list[question_ans_num][3].image.blit(correct_icon, correct_icon_pla)
                 class_answer_list[question_ans_num][1].image.set_alpha(127)
                 class_answer_list[question_ans_num][1].image.blit(wrong_icon, wrong_icon_pla)
@@ -438,18 +466,21 @@ class AnswerMaker_D(pg.sprite.Sprite, SettingsAnswer):
                 class_answer_list[question_ans_num][3].image.blit(wrong_icon, wrong_icon_pla)
                 if len(answer_check) <= actual_que_num:
                     answer_check.append(False)
-                    wrong_ans_store.append([len(answer_check), False])
-                        # Making instance of questions
+                    wrong_answer_store.append([len(answer_check), False])
+                    # Making instance of questions
                     class_question_list.append(QuestionMaker(f"Q{len(class_question_list) + 1}", questions_list[len(answer_check)][1]))
 
                     # Making of answers with spirits
                     class_answer_list.append([AnswerMaker_A("A", questions_list[len(answer_check)][2], questions_list[len(answer_check)][6], opt_colr_list[0]), 
-                                                    AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
-                                                    AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
-                                                    AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
-                                                    ])
+                                            AnswerMaker_B("B", questions_list[len(answer_check)][3], questions_list[len(answer_check)][6], opt_colr_list[1]),
+                                            AnswerMaker_C("C", questions_list[len(answer_check)][4], questions_list[len(answer_check)][6], opt_colr_list[2]),
+                                            AnswerMaker_D("D", questions_list[len(answer_check)][5], questions_list[len(answer_check)][6], opt_colr_list[3])
+                                            ])
                 else:
                     pass
+
+                answer_check_copy.append(False)
+
                 if class_answer_list[question_ans_num][1].anss == self.correct_answer:
                     class_answer_list[question_ans_num][1].image.set_alpha(127)
                     class_answer_list[question_ans_num][1].image.blit(correct_icon, correct_icon_pla)

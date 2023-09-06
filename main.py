@@ -39,6 +39,7 @@ class Game:
         self.button_pressed_time = 0
         self.next_ques_in = 2
         self.updates_ques_num = 0
+        self.wrong_question_num = 0
 
     def looper(self):
         while True:
@@ -72,9 +73,6 @@ class Game:
                             qs.button_states[1] = False
                             qs.button_states[2] = False
                             qs.button_states[3] = False
-                            print(len(qs.class_answer_list))
-                            print(len(qs.class_question_list))
-                            print(self.question_number)
                             self.question_number += 1
                             self.updates_ques_num = self.question_number
                             qs.question_spirit.add(qs.class_question_list[self.question_number])
@@ -82,22 +80,6 @@ class Game:
                             qs.question_ans_num = self.question_number
                             self.moving_to_next = False
     
-                # else:
-                #     self.updates_ques_num = self.question_number
-                #     print(qs.wrong_ans_store)
-                #     if not qs.wrong_ans_store == False:
-                #         print("yes")
-                #         for each_wrong in qs.wrong_ans_store:
-                #             self.updates_ques_num += 1
-                #             #     # Making instance of questions
-                #             # qs.class_question_list.append(qs.QuestionMaker(f"Q{self.updates_ques_num}", qs.questions_list[each_wrong[0]][1]))
-
-                #             # # Making of answers with spirits
-                #             # qs.class_answer_list.append([qs.AnswerMaker_A("A", qs.questions_list[each_wrong[0]][2], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[0]), 
-                #             #                         qs.AnswerMaker_B("B", qs.questions_list[each_wrong[0]][3], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[1]),
-                #             #                         qs.AnswerMaker_C("C", qs.questions_list[each_wrong[0]][4], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[2]),
-                #             #                         qs.AnswerMaker_D("D", qs.questions_list[each_wrong[0]][5], qs.questions_list[each_wrong[0]][6], qs.opt_colr_list[3])
-                #             #                         ])
                 else:
                     self.question_number = self.question_number
                     qs.question_ans_num = self.question_number
@@ -107,17 +89,9 @@ class Game:
             self.window.fill(self.window_bg)
             self.current_time = pg.time.get_ticks()
 
-                # Putting the tracks on the screen
-            for each_lane in rt.tracks:
-                for each_step in each_lane:
-                    self.window.blit(each_step[0], each_step[1])
-                    self.window.blit(rt.starting_lane.line_surface, rt.starting_lane.pos)
-                    self.window.blit(rt.finishing_lane.line_surface, rt.finishing_lane.pos)
-
             # Putting the white board on the screen
             self.window.blit(wt.main_board.surface, (0, 347))
             wt.main_board.surface.blit(wt.display_board.surface, (0, 40))
-            wt.display_board.surface.blit(rt.divider_lane.line_surface, rt.divider_lane.pos)
 
             # Putting the questions on the screen
             qs.question_spirit.draw(self.window)
@@ -136,6 +110,26 @@ class Game:
             if button_pressed_1 == True or button_pressed_2 == True or button_pressed_3 == True or button_pressed_4 == True:
                 self.button_pressed_time = dt.now()
 
+                if (qs.actual_que_num + 1) < len(qs.answer_check_copy):
+                    if qs.answer_check_copy[len(qs.answer_check_copy)-1]:
+                        qs.wrong_answer_store.pop(self.wrong_question_num)
+                        if self.wrong_question_num > 0:
+                            self.wrong_question_num -= 1
+                    else:
+                        # Making instance of questions
+                        qs.class_question_list.append(qs.QuestionMaker(f"Q{len(qs.class_question_list) + 1}", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][1]))
+
+                        # Making of answers with spirits
+                        qs.class_answer_list.append([qs.AnswerMaker_A("A", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][2], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[0]), 
+                                                qs.AnswerMaker_B("B", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][3], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[1]),
+                                                qs.AnswerMaker_C("C", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][4], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[2]),
+                                                qs.AnswerMaker_D("D", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][5], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[3])
+                                                ])
+                        
+                        self.wrong_question_num += 1
+                        if self.wrong_question_num > len(qs.wrong_answer_store) - 1:
+                            self.wrong_question_num = 0
+
 
             # Putting a custom cursor
             pg.mouse.set_cursor(self.cursor)
@@ -148,3 +142,8 @@ class Game:
 if __name__ == "__main__":
     game = Game()
     game.looper()
+
+# Q3,(2x + 3x) = 10, x = 2,x = 5,x = 1,x = 2.5, x = 2
+# Q4,What is School Speed Zone ?,40,50 ,20 ,30,40
+# Q5,New Zealand Captical ?,Welligton,Auckland,Waikto,Christchurch,Welligton
+# Q6,Formula for Power ?,P = W/t,P = A/F,W = Fd,v = d/t,P = W/t
