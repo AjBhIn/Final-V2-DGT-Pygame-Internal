@@ -5,6 +5,7 @@ import race_track as rt
 import white_board as wt
 import question_answers as qs
 from datetime import datetime as dt
+import scene as sc
 
 class Game:
     def __init__(self):
@@ -24,7 +25,7 @@ class Game:
         self.clock = pg.time.Clock()
 
         # Colours for the window
-        self.window_bg = (78, 205, 196)
+        self.window_bg = (247, 247, 247)
 
         # Custom cursor
         self.image_of_cursor = pg.image.load("cursor (1).png") # image of the cursor
@@ -40,6 +41,13 @@ class Game:
         self.next_ques_in = 2
         self.updates_ques_num = 0
         self.wrong_question_num = 0
+        #Adding water
+        self.water = sc.Scene("WATER.png", (1008, 347))
+        sc.scene_sprities.add(self.water)
+
+        # Adding island
+        self.island = sc.Scene("island.png", (1042, 347))
+        sc.scene_sprities.add(self.island)
 
     def looper(self):
         while True:
@@ -93,9 +101,14 @@ class Game:
             self.window.blit(wt.main_board.surface, (0, 347))
             wt.main_board.surface.blit(wt.display_board.surface, (0, 40))
 
+            # Scene
+            sc.scene_sprities.draw(self.window)
+            sc.scene_sprities.draw(self.window)
+
             # Putting the questions on the screen
             qs.question_spirit.draw(self.window)
             qs.class_question_list[self.question_number].update()
+            qs.line_spirit.draw(self.window)
 
             # Putting the options on the screen
             qs.answers_spirit.draw(self.window)
@@ -109,26 +122,6 @@ class Game:
             
             if button_pressed_1 == True or button_pressed_2 == True or button_pressed_3 == True or button_pressed_4 == True:
                 self.button_pressed_time = dt.now()
-
-                if (qs.actual_que_num + 1) < len(qs.answer_check_copy):
-                    if qs.answer_check_copy[len(qs.answer_check_copy)-1]:
-                        qs.wrong_answer_store.pop(self.wrong_question_num)
-                        if self.wrong_question_num > 0:
-                            self.wrong_question_num -= 1
-                    else:
-                        # Making instance of questions
-                        qs.class_question_list.append(qs.QuestionMaker(f"Q{len(qs.class_question_list) + 1}", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][1]))
-
-                        # Making of answers with spirits
-                        qs.class_answer_list.append([qs.AnswerMaker_A("A", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][2], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[0]), 
-                                                qs.AnswerMaker_B("B", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][3], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[1]),
-                                                qs.AnswerMaker_C("C", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][4], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[2]),
-                                                qs.AnswerMaker_D("D", qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][5], qs.questions_list[qs.wrong_answer_store[self.wrong_question_num][0]][6], qs.opt_colr_list[3])
-                                                ])
-                        
-                        self.wrong_question_num += 1
-                        if self.wrong_question_num > len(qs.wrong_answer_store) - 1:
-                            self.wrong_question_num = 0
 
 
             # Putting a custom cursor
